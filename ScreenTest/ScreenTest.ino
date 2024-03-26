@@ -8,4 +8,5 @@ void setup() {
 void loop() {
   // put your main code here, to run repeatedly:
   lcd.println("Hello World!");
+  lcd.println("Hello! This is a Sheleah Push :)");
 }
