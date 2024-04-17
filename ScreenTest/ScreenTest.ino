@@ -1,6 +1,22 @@
-#include "Nokia_5110.h"
 #include "Dictionary.h"
-Nokia_5110 lcd = Nokia_5110(1, 2, 10, 13, 14);
+#include <SPI.h>
+#include <Adafruit_GFX.h>
+#include <TFT_ILI9163C.h>
+
+// Color definitions
+#define BLACK   0x0000
+#define BLUE    0x001F
+#define RED     0xF800
+#define GREEN   0x07E0
+#define CYAN    0x07FF
+#define MAGENTA 0xF81F
+#define YELLOW  0xFFE0  
+#define WHITE   0xFFFF
+
+#define __CS 10
+#define __DC 9
+
+TFT_ILI9163C display = TFT_ILI9163C(__CS, 8, __DC);
 
 enum {TUTORIAL, HUNTING, POLLINATING} state = TUTORIAL;
 Dictionary flowers = new Dictionary();
@@ -9,6 +25,7 @@ int curSlide = 0;
 void setup() {
   // put your setup code here, to run once:
   Serial.begin(9600);
+  display.begin();
   flowers("1", "Azalea");
 }
 
@@ -35,7 +52,7 @@ void tutorial() {
     "Would you like to see this again? /n Yes /n No",
     "Alright, good luck!"
   };
-  Serial.println(tutorialText[0]);
+  display.print(tutorialText[0]);
 }
 
 void hunting() {
