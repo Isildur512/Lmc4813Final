@@ -34,6 +34,15 @@ char *displayText[ARRAYSIZE] = {
   "     Welcome! \n \n Press the button to begin!",
   "Carry the bee to     discover the flora   around Georgia Tech's campus.",
   "       Flowers: \n         - - - \n Look for the small  pink flowers nearby!"
+  "     Higan Cherry"
+  "The Higan Cherry is also called the Spring Cherry because it blooms early. "
+  "     o - - \n Head a couple steps north to the hot pink azaleas."
+  "     Azalea"
+  "While beautiful, these flowers are poisonous if ingested."
+  "     o o - \n Cross north through stairs. Look for the white flowers to the left."
+  "     Philadelphia Fleabane"
+  "The Philadelphia Fleabane was accidentally introduced from Europe and used in mattresses."
+  "     o o o \n Adventure complete. Press button to return to restart."
 };
 
 
