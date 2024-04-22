@@ -19,9 +19,10 @@
 #define SCREEN_ADDRESS 0x3C  ///< See datasheet for Address; 0x3D for 128x64, 0x3C for 128x32
 Adafruit_SSD1306 display(SCREEN_WIDTH, SCREEN_HEIGHT, &Wire, OLED_RESET);
 
-#define ARRAYSIZE 6
+#define ARRAYSIZE 7
 
 int curText = 0;
+int prevText = 0;
 
 EncoderButton eb1(2, 3, 4);
 
@@ -31,7 +32,8 @@ char *displayText[ARRAYSIZE] = {
   "       - - - \n Look for the small  pink flowers nearby! \n",
   "       o - - \n Cross north through the stairs. Look for  the white flowers.",
   "       o o - \nKeep north. Look for   the small purple   flowers on the ground.",
-  "       o o o \nAdventure complete.   Press button to      return to start."
+  "       o o o \nAdventure complete.   Press button to      return to start.",
+  "       ERROR \n  Incorrect flower."
 };
 
 
@@ -47,7 +49,7 @@ void onEb1Clicked(EncoderButton& eb) {
     curText += 1;
   }
   display.clearDisplay();
-  if (curText == ARRAYSIZE) {
+  if (curText == ARRAYSIZE - 1) {
     curText = 0;
   }
 }
@@ -82,6 +84,7 @@ void setup() {
 }
 
 void loop() {
+
   eb1.update();
 
   display.setTextSize(1);
@@ -89,6 +92,12 @@ void loop() {
   display.setCursor(0, 0);
   display.println((displayText[curText]));
   display.display();
+
+  if (curText == 6) {
+    Serial.println("Oop");
+    delay(1000);
+    curText = prevText;
+  }
 
   if(eb1.currentDuration() != 0) {
     display.clearDisplay();
@@ -103,10 +112,26 @@ void loop() {
     return;
   }
 
+String content= "";
+  byte letter;
+  for (byte i = 0; i < mfrc522.uid.size; i++) 
+  {
+     Serial.print(mfrc522.uid.uidByte[i] < 0x10 ? " 0" : " ");
+     Serial.print(mfrc522.uid.uidByte[i], HEX);
+     content.concat(String(mfrc522.uid.uidByte[i] < 0x10 ? " 0" : " "));
+     content.concat(String(mfrc522.uid.uidByte[i], HEX));
+  }
+
   // Dump debug info about the card; PICC_HaltA() is automatically called
   mfrc522.PICC_DumpToSerial(&(mfrc522.uid));
   
-  if (curText == 2 || curText == 3 || curText == 4) {
+  if ((curText == 2 && content == " 04 ef 48 43 73 00 00") ||  (curText == 3 && content == " 04 9b a5 03 11 01 89") || (curText == 4 && content == " 04 0a 27 43 73 00 00")){
     curText += 1;
+  } else {
+    prevText = curText;
+    curText = 6;
   }
+
+  
+
 }
