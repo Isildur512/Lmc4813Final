@@ -94,7 +94,6 @@ void loop() {
   display.display();
 
   if (curText == 6) {
-    Serial.println("Oop");
     delay(1000);
     curText = prevText;
   }
@@ -112,7 +111,7 @@ void loop() {
     return;
   }
 
-String content= "";
+  /*String content= "";
   byte letter;
   for (byte i = 0; i < mfrc522.uid.size; i++) 
   {
@@ -120,16 +119,41 @@ String content= "";
      Serial.print(mfrc522.uid.uidByte[i], HEX);
      content.concat(String(mfrc522.uid.uidByte[i] < 0x10 ? " 0" : " "));
      content.concat(String(mfrc522.uid.uidByte[i], HEX));
-  }
+  }*/
+
+  byte content = mfrc522.uid.uidByte[2];
 
   // Dump debug info about the card; PICC_HaltA() is automatically called
   mfrc522.PICC_DumpToSerial(&(mfrc522.uid));
   
-  if ((curText == 2 && content == " 04 ef 48 43 73 00 00") ||  (curText == 3 && content == " 04 9b a5 03 11 01 89") || (curText == 4 && content == " 04 0a 27 43 73 00 00")){
-    curText += 1;
-  } else {
-    prevText = curText;
-    curText = 6;
+  Serial.println(content);
+  if (curText == 2) {
+    if (content == 72){
+      curText += 1;
+    } else if (content == 34){
+      curText += 1;
+    } else {
+      prevText = curText;
+      curText = 6;
+    }
+  } else if (curText == 3) {
+    if (content == 165) {
+      curText += 1;
+    } else if (content == 97){
+      curText += 1;
+    } else {
+      prevText = curText;
+      curText = 6;
+    }
+  } else  if (curText == 4) {
+    if (content == 39) {
+      curText += 1;
+    } else if (content == 2){
+      curText += 1;
+    } else {
+      prevText = curText;
+      curText = 6;
+    }
   }
 
   
